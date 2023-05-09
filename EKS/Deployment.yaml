@@ -1,0 +1,22 @@
+# ./EKS/Deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eks-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ft
+  template:
+    metadata:
+      labels:
+        app: ft
+    spec:
+      containers:
+        - name: ft
+          image: AWS_ECR_URI
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always

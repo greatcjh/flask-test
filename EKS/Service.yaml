@@ -1,0 +1,14 @@
+# ./EKS/Service.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ft-svc
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 80
+  selector:
+    app: ft
+  type: LoadBalancer
