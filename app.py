@@ -7,7 +7,7 @@ def home():
 
 @app.route('/mypage')
 def mypage():
-   return 'This is My Page! HaHa 3!'
+   return 'This is My Page! HaHa 2!'
 
 if __name__ == '__main__':
    app.run('0.0.0.0',port=5000,debug=True)
