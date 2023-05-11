@@ -7,8 +7,8 @@ phases:
       docker: 20
     commands:
       - echo Install curl...
-      - sudo apt-get update
-      - sudo apt-get install curl
+      - sudo yum -y update
+      - sudo yum -y install curl
       - curl -v
       - echo Install AWSCLI...
       - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
