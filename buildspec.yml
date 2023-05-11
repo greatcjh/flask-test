@@ -3,13 +3,10 @@
 version: 0.2
 phases:
   install:
-    runtime-versions:
-      docker: 20
     commands:
       - echo Install curl...
-      - sudo yum clean all
-      - sudo yum -y update
-      - sudo yum -y install curl
+      - sudo apt-get -y update
+      - sudo apt-get -y install curl
       - curl -v
       - echo Install AWSCLI...
       - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
