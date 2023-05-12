@@ -27,5 +27,4 @@ phases:
       - AWS_ECR_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - DATE='date'
       - echo Build completed on $DATE
-      - kubectl apply -f ./EKS/Deployment.yaml
-      - kubectl apply -f ./EKS/Service.yaml
+      - kubectl apply -f ./EKS/sample.yaml

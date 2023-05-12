@@ -1,0 +1,59 @@
+# ./EKS/sample.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ft-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ft
+  template:
+    metadata:
+      labels:
+        app: ft
+    spec:
+      containers:
+        - name: ft
+          image: AWS_ECR_URI
+          ports:
+            - containerPort: 5000
+          imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ft-svc
+spec:
+  ports:
+    - port: 80
+      targetPort: 5000
+  selector:
+    app: ft
+  type: NodePort
+
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ft-ingress
+  annotations:
+    # Ingress Core Settings
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/target-group-attributes: stickiness.enabled=true,stickiness.lb_cookie.duration_seconds=60
+    # SSL Settings
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:603229842386:certificate/3b5a7d4a-86eb-42d2-a9b4-89c87b5fab58
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: ft-svc
+              servicePort: 80
