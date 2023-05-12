@@ -18,5 +18,5 @@ spec:
         - name: ft
           image: AWS_ECR_URI
           ports:
-            - containerPort: 80
+            - containerPort: 5000
           imagePullPolicy: Always
