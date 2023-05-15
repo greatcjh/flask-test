@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: ft
-          image: AWS_ECR_URI
+          image: CONTAINER_IMAGE
           ports:
             - containerPort: 5000
           imagePullPolicy: Always
