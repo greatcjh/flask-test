@@ -42,14 +42,20 @@ metadata:
   annotations:
     # Ingress Core Settings
     kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/load-balancer-name: ft-ingress-elb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/target-group-attributes: stickiness.enabled=true,stickiness.lb_cookie.duration_seconds=60
     # SSL Settings
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:603229842386:certificate/3b5a7d4a-86eb-42d2-a9b4-89c87b5fab58
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:603229842386:certificate/ea3abb14-3e69-49a3-b705-8ce15679e7d0
     alb.ingress.kubernetes.io/ssl-redirect: '443'
 spec:
+  defaultBackend:
+    service:
+      name: "ft-svc"
+      port:
+        number: 80
   rules:
     - http:
         paths:
