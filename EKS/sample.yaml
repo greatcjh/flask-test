@@ -57,6 +57,6 @@ spec:
             path: /*
             backend:
               service:
-                name: ft-svc
+                name: "ft-svc"
                 port:
                   number: 80
