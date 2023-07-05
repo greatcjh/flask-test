@@ -66,3 +66,10 @@ spec:
                 name: "ft-svc"
                 port:
                   number: 80
+          - pathType: Prefix
+              path: /jenkins
+              backend:
+                service:
+                  name: "jenkins"
+                  port:
+                    number: 8080
