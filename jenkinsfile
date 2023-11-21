@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_DEFAULT_REGION = 'ap-northeast-1'
+        AWS_ACCOUNT_ID = '603229842386'
+        IMAGE_REPO_NAME = '여기에_이미지_저장소_이름_입력'
+        IMAGE_TAG = '여기에_이미지_태그_입력'
+        EKS_CLUSTER_NAME = 'ekscluster3'
+    }
+
+    stages {
+        stage('Install') {
+            steps {
+                sh 'aws sts get-caller-identity'
+                sh 'echo Install Kubectl...'
+                sh 'curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.23.17/2023-03-17/bin/linux/amd64/kubectl'
+                sh 'chmod +x ./kubectl'
+                sh 'sudo mv ./kubectl /usr/local/bin/kubectl'
+                sh 'mkdir ~/.kube'
+                sh "aws eks --region ${AWS_DEFAULT_REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}"
+            }
+        }
+
+        stage('Pre Build') {
+            steps {
+                sh 'echo Logging in to Amazon ECR...'
+                sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/"
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'echo Build started on `date`'
+                sh 'echo Building the Docker image...'
+                sh "docker build -t ${IMAGE_REPO_NAME}:${IMAGE_TAG} ."
+                sh "docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+                sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+                sh "DATE=`date`"
+                sh "echo Build completed on $DATE"
+            }
+        }
+
+        stage('Post Build') {
+            steps {
+                sh "echo Start Deploy on `date`"
+                sh "sed -i 's@CONTAINER_IMAGE@\"${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}\"@' ./EKS/sample.yaml"
+                sh "kubectl apply -f ./EKS/sample.yaml"
+            }
+        }
+    }
+}

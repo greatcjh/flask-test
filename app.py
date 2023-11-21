@@ -1,5 +1,11 @@
 from flask import Flask, request, render_template
+from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
+from aws_xray_sdk.core import xray_recorder
+
 app = Flask(__name__)
+
+xray_recorder.configure(service='YourServiceName')
+XRayMiddleware(app, xray_recorder)
 
 @app.route('/')
 def home():
