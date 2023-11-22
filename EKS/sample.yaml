@@ -54,13 +54,6 @@ spec:
     - http:
         paths:
           - pathType: Prefix
-            path: /
-            backend:
-              service:
-                 name: "ft-svc"
-                 port:
-                   number: 80
-          - pathType: Prefix
             path: /jenkins
             backend:
               service:
