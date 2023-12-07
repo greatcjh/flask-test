@@ -27,5 +27,5 @@ phases:
   post_build:
     commands:
       - echo Start Deploy on $DATE
-      - sed -i 's@CONTAINER_IMAGE@'"$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG"'@' ./EKS/sample.yaml
+      - sudo sed -i 's@CONTAINER_IMAGE@'"$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG"'@' ./EKS/sample.yaml
       - kubectl apply -f ./EKS/sample.yaml
