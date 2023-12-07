@@ -4,7 +4,7 @@ from aws_xray_sdk.core import xray_recorder
 
 app = Flask(__name__)
 
-xray_recorder.configure(service='YourServiceName')
+xray_recorder.configure(service='ft')
 XRayMiddleware(app, xray_recorder)
 
 @app.route('/')
